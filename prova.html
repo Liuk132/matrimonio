@@ -1212,6 +1212,13 @@
       setTimeout(caricaTableau, Math.min(attesa + 1500, 2147483000));
       return;
     }
+    if (params.has('demo')) {                 // prova per gli amici: nomi di fantasia, nessun nome vero
+      const N = ['Anna','Marco','Giulia','Paolo','Sara','Luca','Elisa','Davide','Chiara','Matteo','Laura','Simone','Marta','Andrea','Federica','Nicola','Irene','Stefano','Valentina','Fabio','Alice','Giorgio','Silvia','Roberto','Elena','Tommaso'];
+      const r = off => Array.from({ length: 13 }, (_, i) => [N[(i * 2 + off) % 26] + ' (prova)', N[(i * 2 + 1 + off) % 26] + ' (prova)']);
+      mostraTableau([{ titolo: 'Tavolata Imperiale · I', etichetta: 'TAVOLATA I', righe: r(0) },
+                     { titolo: 'Tavolata Imperiale · II', etichetta: 'TAVOLATA II', righe: r(7) }]);
+      return;
+    }
     const salvato = store.get('tableau-gl');
     if (salvato && !chiave) { try { mostraTableau(JSON.parse(salvato)); } catch (e) {} }
     try {
