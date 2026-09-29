@@ -577,6 +577,134 @@
   body.foto-aperte .foto-chiusa { display: none; }
   body:not(.foto-aperte) .foto-box { display: none; }
 
+
+  /* ------- galleria ------- */
+  .galleria { margin-top: 3rem; }
+  body:not(.foto-aperte) .galleria { display: none; }
+  .gal-titolo {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+  .gal-conta {
+    text-align: center;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sage-deep);
+    margin: 0.3rem 0 1.2rem;
+  }
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 0 -1rem;
+  }
+  .gal-grid button {
+    position: relative;
+    aspect-ratio: 1;
+    border: 0; padding: 0;
+    background: #E6E1D6;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .gal-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gal-grid button.video::after {
+    content: '';
+    position: absolute; left: 50%; top: 50%;
+    width: 34px; height: 34px;
+    transform: translate(-50%, -50%);
+    background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2219%22%20fill%3D%22%23000%22%20fill-opacity%3D%220.45%22%2F%3E%3Cpath%20d%3D%22M16%2012%20L29%2020%20L16%2028%20Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  }
+  .gal-grid button.nuova { animation: arrivo 0.9s ease-out; }
+  @keyframes arrivo { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+  .gal-vuota {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--sage-deep);
+    padding: 1rem 0;
+  }
+  #gal-altre { margin-top: 1.4rem; display: none; }
+
+  /* ------- visualizzatore ------- */
+  .vis {
+    position: fixed; inset: 0; z-index: 50;
+    background: #111;
+    display: none;
+    align-items: center; justify-content: center;
+    touch-action: pan-y;
+  }
+  .vis.aperto { display: flex; }
+  .vis img, .vis iframe { max-width: 100vw; max-height: 86vh; display: block; }
+  .vis iframe { width: 100vw; height: 70vh; border: 0; }
+  .vis-chiudi, .vis-prec, .vis-succ {
+    position: absolute;
+    background: none; border: 0;
+    color: #fff; font-size: 2rem; line-height: 1;
+    padding: 0.8rem 1rem; cursor: pointer;
+    opacity: 0.85;
+  }
+  .vis-chiudi { top: env(safe-area-inset-top, 0); right: 0; }
+  .vis-prec { left: 0; top: 50%; transform: translateY(-50%); }
+  .vis-succ { right: 0; top: 50%; transform: translateY(-50%); }
+  .vis-dida {
+    position: absolute; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
+    text-align: center; color: #eee;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem;
+  }
+  body.vis-aperto { overflow: hidden; }
+
+  /* ------- slideshow per la TV ------- */
+  .show { display: none; }
+  body.slideshow > *:not(.show) { display: none !important; }
+  body.slideshow { background: #0E0F0D; overflow: hidden; }
+  body.slideshow .show { display: block; position: fixed; inset: 0; }
+  .show-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+  .show-img.on { opacity: 1; }
+  .show-fondo {
+    position: absolute; inset: -40px;
+    width: calc(100% + 80px); height: calc(100% + 80px);
+    object-fit: cover;
+    filter: blur(28px) brightness(0.45);
+    opacity: 0; transition: opacity 1.4s ease;
+  }
+  .show-fondo.on { opacity: 1; }
+  .show-dida {
+    position: absolute; left: 3vw; bottom: 3vh;
+    color: #F7F4EE;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 2.2vw;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  }
+  .show-qr {
+    position: absolute; right: 2.5vw; bottom: 3vh;
+    background: #F7F4EE;
+    padding: 1vw 1vw 0.7vw;
+    border-radius: 10px;
+    text-align: center;
+    width: 12vw;
+  }
+  .show-qr img { width: 100%; display: block; }
+  .show-qr span {
+    display: block; margin-top: 0.4vw;
+    font-family: 'Jost', sans-serif; font-size: 0.72vw; white-space: nowrap;
+    letter-spacing: 0.18em; text-transform: uppercase; color: #3E4A3D;
+  }
+  .show-attesa {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #F7F4EE;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 3vw;
+  }
   @media (prefers-reduced-motion: reduce) {
     .spark { animation: none; opacity: 0.4; }
     .card { animation: none; }
@@ -709,7 +837,7 @@
     <p>Il 10 ottobre, proprio qui,<br>potrete regalarci le foto e i video della giornata.</p>
   </div>
   <div class="foto-box">
-    <p class="foto-testo">Scattate liberamente, poi caricate qui le foto e i brevi video: arriveranno solo a noi due, in qualità originale.</p>
+    <p class="foto-testo">Scattate liberamente, poi caricate qui le foto e i brevi video: le vedranno subito tutti, qui sotto, e a noi arriveranno in qualità originale.</p>
     <div class="foto-campo">
       <label for="foto-autore">Il tuo nome (facoltativo)</label>
       <input id="foto-autore" type="text" autocomplete="given-name" maxlength="40" placeholder="Così sappiamo chi ringraziare">
@@ -725,7 +853,31 @@
     </div>
     <p class="foto-nota">Tenete aperta questa pagina finché il caricamento non è completo.</p>
   </div>
+
+  <div class="galleria" id="galleria">
+    <h3 class="gal-titolo">La nostra notte, vista da voi</h3>
+    <p class="gal-conta" id="gal-conta">&nbsp;</p>
+    <div class="gal-grid" id="gal-grid"></div>
+    <p class="gal-vuota" id="gal-vuota">La prima foto potrebbe essere la tua ✦</p>
+    <button class="btn" id="gal-altre" type="button"><span class="btn-label">Mostra altre</span></button>
+  </div>
 </section>
+
+<div class="vis" id="vis" role="dialog" aria-label="Foto">
+  <button class="vis-chiudi" id="vis-chiudi" aria-label="Chiudi">&times;</button>
+  <button class="vis-prec" id="vis-prec" aria-label="Precedente">&lsaquo;</button>
+  <div id="vis-media"></div>
+  <button class="vis-succ" id="vis-succ" aria-label="Successiva">&rsaquo;</button>
+  <p class="vis-dida" id="vis-dida"></p>
+</div>
+
+<div class="show" id="show">
+  <img class="show-fondo" id="fondo-a" alt=""><img class="show-fondo" id="fondo-b" alt="">
+  <img class="show-img" id="show-a" alt=""><img class="show-img" id="show-b" alt="">
+  <div class="show-attesa" id="show-attesa">Le vostre foto appariranno qui ✦</div>
+  <div class="show-dida" id="show-dida"></div>
+  <div class="show-qr"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2033%2033%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20width%3D%2233%22%20height%3D%2233%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Cpath%20d%3D%22M2%2C2h1v1h-1zM3%2C2h1v1h-1zM4%2C2h1v1h-1zM5%2C2h1v1h-1zM6%2C2h1v1h-1zM7%2C2h1v1h-1zM8%2C2h1v1h-1zM12%2C2h1v1h-1zM13%2C2h1v1h-1zM15%2C2h1v1h-1zM16%2C2h1v1h-1zM17%2C2h1v1h-1zM18%2C2h1v1h-1zM19%2C2h1v1h-1zM20%2C2h1v1h-1zM21%2C2h1v1h-1zM22%2C2h1v1h-1zM24%2C2h1v1h-1zM25%2C2h1v1h-1zM26%2C2h1v1h-1zM27%2C2h1v1h-1zM28%2C2h1v1h-1zM29%2C2h1v1h-1zM30%2C2h1v1h-1zM2%2C3h1v1h-1zM8%2C3h1v1h-1zM15%2C3h1v1h-1zM16%2C3h1v1h-1zM17%2C3h1v1h-1zM20%2C3h1v1h-1zM24%2C3h1v1h-1zM30%2C3h1v1h-1zM2%2C4h1v1h-1zM4%2C4h1v1h-1zM5%2C4h1v1h-1zM6%2C4h1v1h-1zM8%2C4h1v1h-1zM11%2C4h1v1h-1zM13%2C4h1v1h-1zM14%2C4h1v1h-1zM16%2C4h1v1h-1zM17%2C4h1v1h-1zM19%2C4h1v1h-1zM20%2C4h1v1h-1zM21%2C4h1v1h-1zM24%2C4h1v1h-1zM26%2C4h1v1h-1zM27%2C4h1v1h-1zM28%2C4h1v1h-1zM30%2C4h1v1h-1zM2%2C5h1v1h-1zM4%2C5h1v1h-1zM5%2C5h1v1h-1zM6%2C5h1v1h-1zM8%2C5h1v1h-1zM11%2C5h1v1h-1zM12%2C5h1v1h-1zM15%2C5h1v1h-1zM20%2C5h1v1h-1zM21%2C5h1v1h-1zM24%2C5h1v1h-1zM26%2C5h1v1h-1zM27%2C5h1v1h-1zM28%2C5h1v1h-1zM30%2C5h1v1h-1zM2%2C6h1v1h-1zM4%2C6h1v1h-1zM5%2C6h1v1h-1zM6%2C6h1v1h-1zM8%2C6h1v1h-1zM12%2C6h1v1h-1zM16%2C6h1v1h-1zM17%2C6h1v1h-1zM18%2C6h1v1h-1zM19%2C6h1v1h-1zM20%2C6h1v1h-1zM24%2C6h1v1h-1zM26%2C6h1v1h-1zM27%2C6h1v1h-1zM28%2C6h1v1h-1zM30%2C6h1v1h-1zM2%2C7h1v1h-1zM8%2C7h1v1h-1zM10%2C7h1v1h-1zM11%2C7h1v1h-1zM17%2C7h1v1h-1zM18%2C7h1v1h-1zM21%2C7h1v1h-1zM24%2C7h1v1h-1zM30%2C7h1v1h-1zM2%2C8h1v1h-1zM3%2C8h1v1h-1zM4%2C8h1v1h-1zM5%2C8h1v1h-1zM6%2C8h1v1h-1zM7%2C8h1v1h-1zM8%2C8h1v1h-1zM10%2C8h1v1h-1zM12%2C8h1v1h-1zM14%2C8h1v1h-1zM16%2C8h1v1h-1zM18%2C8h1v1h-1zM20%2C8h1v1h-1zM22%2C8h1v1h-1zM24%2C8h1v1h-1zM25%2C8h1v1h-1zM26%2C8h1v1h-1zM27%2C8h1v1h-1zM28%2C8h1v1h-1zM29%2C8h1v1h-1zM30%2C8h1v1h-1zM11%2C9h1v1h-1zM12%2C9h1v1h-1zM15%2C9h1v1h-1zM17%2C9h1v1h-1zM18%2C9h1v1h-1zM19%2C9h1v1h-1zM20%2C9h1v1h-1zM22%2C9h1v1h-1zM2%2C10h1v1h-1zM5%2C10h1v1h-1zM7%2C10h1v1h-1zM8%2C10h1v1h-1zM10%2C10h1v1h-1zM12%2C10h1v1h-1zM13%2C10h1v1h-1zM14%2C10h1v1h-1zM16%2C10h1v1h-1zM17%2C10h1v1h-1zM18%2C10h1v1h-1zM22%2C10h1v1h-1zM23%2C10h1v1h-1zM25%2C10h1v1h-1zM4%2C11h1v1h-1zM5%2C11h1v1h-1zM6%2C11h1v1h-1zM7%2C11h1v1h-1zM12%2C11h1v1h-1zM13%2C11h1v1h-1zM15%2C11h1v1h-1zM18%2C11h1v1h-1zM22%2C11h1v1h-1zM24%2C11h1v1h-1zM25%2C11h1v1h-1zM27%2C11h1v1h-1zM30%2C11h1v1h-1zM4%2C12h1v1h-1zM5%2C12h1v1h-1zM7%2C12h1v1h-1zM8%2C12h1v1h-1zM10%2C12h1v1h-1zM11%2C12h1v1h-1zM12%2C12h1v1h-1zM13%2C12h1v1h-1zM15%2C12h1v1h-1zM16%2C12h1v1h-1zM19%2C12h1v1h-1zM21%2C12h1v1h-1zM22%2C12h1v1h-1zM25%2C12h1v1h-1zM27%2C12h1v1h-1zM28%2C12h1v1h-1zM29%2C12h1v1h-1zM2%2C13h1v1h-1zM5%2C13h1v1h-1zM9%2C13h1v1h-1zM10%2C13h1v1h-1zM11%2C13h1v1h-1zM12%2C13h1v1h-1zM13%2C13h1v1h-1zM15%2C13h1v1h-1zM18%2C13h1v1h-1zM20%2C13h1v1h-1zM21%2C13h1v1h-1zM22%2C13h1v1h-1zM26%2C13h1v1h-1zM28%2C13h1v1h-1zM29%2C13h1v1h-1zM2%2C14h1v1h-1zM5%2C14h1v1h-1zM8%2C14h1v1h-1zM9%2C14h1v1h-1zM10%2C14h1v1h-1zM13%2C14h1v1h-1zM14%2C14h1v1h-1zM16%2C14h1v1h-1zM17%2C14h1v1h-1zM18%2C14h1v1h-1zM19%2C14h1v1h-1zM20%2C14h1v1h-1zM21%2C14h1v1h-1zM22%2C14h1v1h-1zM24%2C14h1v1h-1zM27%2C14h1v1h-1zM29%2C14h1v1h-1zM30%2C14h1v1h-1zM2%2C15h1v1h-1zM10%2C15h1v1h-1zM11%2C15h1v1h-1zM13%2C15h1v1h-1zM15%2C15h1v1h-1zM16%2C15h1v1h-1zM21%2C15h1v1h-1zM22%2C15h1v1h-1zM2%2C16h1v1h-1zM5%2C16h1v1h-1zM8%2C16h1v1h-1zM10%2C16h1v1h-1zM12%2C16h1v1h-1zM14%2C16h1v1h-1zM15%2C16h1v1h-1zM16%2C16h1v1h-1zM24%2C16h1v1h-1zM26%2C16h1v1h-1zM27%2C16h1v1h-1zM28%2C16h1v1h-1zM29%2C16h1v1h-1zM30%2C16h1v1h-1zM3%2C17h1v1h-1zM5%2C17h1v1h-1zM7%2C17h1v1h-1zM10%2C17h1v1h-1zM11%2C17h1v1h-1zM12%2C17h1v1h-1zM13%2C17h1v1h-1zM14%2C17h1v1h-1zM18%2C17h1v1h-1zM19%2C17h1v1h-1zM20%2C17h1v1h-1zM21%2C17h1v1h-1zM22%2C17h1v1h-1zM24%2C17h1v1h-1zM27%2C17h1v1h-1zM29%2C17h1v1h-1zM2%2C18h1v1h-1zM5%2C18h1v1h-1zM6%2C18h1v1h-1zM7%2C18h1v1h-1zM8%2C18h1v1h-1zM9%2C18h1v1h-1zM12%2C18h1v1h-1zM13%2C18h1v1h-1zM14%2C18h1v1h-1zM15%2C18h1v1h-1zM17%2C18h1v1h-1zM19%2C18h1v1h-1zM21%2C18h1v1h-1zM25%2C18h1v1h-1zM29%2C18h1v1h-1zM5%2C19h1v1h-1zM7%2C19h1v1h-1zM10%2C19h1v1h-1zM11%2C19h1v1h-1zM12%2C19h1v1h-1zM13%2C19h1v1h-1zM15%2C19h1v1h-1zM16%2C19h1v1h-1zM18%2C19h1v1h-1zM19%2C19h1v1h-1zM24%2C19h1v1h-1zM25%2C19h1v1h-1zM27%2C19h1v1h-1zM30%2C19h1v1h-1zM2%2C20h1v1h-1zM4%2C20h1v1h-1zM5%2C20h1v1h-1zM6%2C20h1v1h-1zM7%2C20h1v1h-1zM8%2C20h1v1h-1zM9%2C20h1v1h-1zM10%2C20h1v1h-1zM11%2C20h1v1h-1zM16%2C20h1v1h-1zM24%2C20h1v1h-1zM25%2C20h1v1h-1zM26%2C20h1v1h-1zM29%2C20h1v1h-1zM30%2C20h1v1h-1zM4%2C21h1v1h-1zM5%2C21h1v1h-1zM6%2C21h1v1h-1zM10%2C21h1v1h-1zM11%2C21h1v1h-1zM12%2C21h1v1h-1zM16%2C21h1v1h-1zM17%2C21h1v1h-1zM19%2C21h1v1h-1zM20%2C21h1v1h-1zM23%2C21h1v1h-1zM25%2C21h1v1h-1zM26%2C21h1v1h-1zM29%2C21h1v1h-1zM30%2C21h1v1h-1zM2%2C22h1v1h-1zM4%2C22h1v1h-1zM5%2C22h1v1h-1zM8%2C22h1v1h-1zM17%2C22h1v1h-1zM18%2C22h1v1h-1zM21%2C22h1v1h-1zM22%2C22h1v1h-1zM23%2C22h1v1h-1zM24%2C22h1v1h-1zM25%2C22h1v1h-1zM26%2C22h1v1h-1zM28%2C22h1v1h-1zM10%2C23h1v1h-1zM11%2C23h1v1h-1zM14%2C23h1v1h-1zM16%2C23h1v1h-1zM18%2C23h1v1h-1zM19%2C23h1v1h-1zM21%2C23h1v1h-1zM22%2C23h1v1h-1zM26%2C23h1v1h-1zM28%2C23h1v1h-1zM29%2C23h1v1h-1zM30%2C23h1v1h-1zM2%2C24h1v1h-1zM3%2C24h1v1h-1zM4%2C24h1v1h-1zM5%2C24h1v1h-1zM6%2C24h1v1h-1zM7%2C24h1v1h-1zM8%2C24h1v1h-1zM12%2C24h1v1h-1zM13%2C24h1v1h-1zM14%2C24h1v1h-1zM18%2C24h1v1h-1zM20%2C24h1v1h-1zM22%2C24h1v1h-1zM24%2C24h1v1h-1zM26%2C24h1v1h-1zM29%2C24h1v1h-1zM2%2C25h1v1h-1zM8%2C25h1v1h-1zM10%2C25h1v1h-1zM13%2C25h1v1h-1zM16%2C25h1v1h-1zM17%2C25h1v1h-1zM20%2C25h1v1h-1zM22%2C25h1v1h-1zM26%2C25h1v1h-1zM27%2C25h1v1h-1zM28%2C25h1v1h-1zM2%2C26h1v1h-1zM4%2C26h1v1h-1zM5%2C26h1v1h-1zM6%2C26h1v1h-1zM8%2C26h1v1h-1zM11%2C26h1v1h-1zM12%2C26h1v1h-1zM14%2C26h1v1h-1zM17%2C26h1v1h-1zM18%2C26h1v1h-1zM19%2C26h1v1h-1zM22%2C26h1v1h-1zM23%2C26h1v1h-1zM24%2C26h1v1h-1zM25%2C26h1v1h-1zM26%2C26h1v1h-1zM29%2C26h1v1h-1zM30%2C26h1v1h-1zM2%2C27h1v1h-1zM4%2C27h1v1h-1zM5%2C27h1v1h-1zM6%2C27h1v1h-1zM8%2C27h1v1h-1zM10%2C27h1v1h-1zM12%2C27h1v1h-1zM14%2C27h1v1h-1zM15%2C27h1v1h-1zM19%2C27h1v1h-1zM20%2C27h1v1h-1zM21%2C27h1v1h-1zM22%2C27h1v1h-1zM23%2C27h1v1h-1zM24%2C27h1v1h-1zM25%2C27h1v1h-1zM26%2C27h1v1h-1zM27%2C27h1v1h-1zM28%2C27h1v1h-1zM29%2C27h1v1h-1zM2%2C28h1v1h-1zM4%2C28h1v1h-1zM5%2C28h1v1h-1zM6%2C28h1v1h-1zM8%2C28h1v1h-1zM12%2C28h1v1h-1zM13%2C28h1v1h-1zM14%2C28h1v1h-1zM15%2C28h1v1h-1zM16%2C28h1v1h-1zM18%2C28h1v1h-1zM19%2C28h1v1h-1zM21%2C28h1v1h-1zM26%2C28h1v1h-1zM27%2C28h1v1h-1zM28%2C28h1v1h-1zM30%2C28h1v1h-1zM2%2C29h1v1h-1zM8%2C29h1v1h-1zM11%2C29h1v1h-1zM13%2C29h1v1h-1zM14%2C29h1v1h-1zM15%2C29h1v1h-1zM19%2C29h1v1h-1zM21%2C29h1v1h-1zM22%2C29h1v1h-1zM24%2C29h1v1h-1zM25%2C29h1v1h-1zM29%2C29h1v1h-1zM2%2C30h1v1h-1zM3%2C30h1v1h-1zM4%2C30h1v1h-1zM5%2C30h1v1h-1zM6%2C30h1v1h-1zM7%2C30h1v1h-1zM8%2C30h1v1h-1zM10%2C30h1v1h-1zM11%2C30h1v1h-1zM12%2C30h1v1h-1zM13%2C30h1v1h-1zM14%2C30h1v1h-1zM16%2C30h1v1h-1zM18%2C30h1v1h-1zM19%2C30h1v1h-1zM22%2C30h1v1h-1zM24%2C30h1v1h-1zM25%2C30h1v1h-1zM27%2C30h1v1h-1zM29%2C30h1v1h-1z%22%20fill%3D%22%233E4A3D%22%2F%3E%3C%2Fsvg%3E" alt="Codice QR del sito"><span>Carica le tue foto</span></div>
+</div>
 
 <script>
   // ---- stelline scintillanti generate casualmente ----
@@ -747,7 +899,7 @@
 
   
   // ---- testi come SVG: Samsung dark non li inverte ----
-  const TXT_SEL = '.storia,.eyebrow,.date,.lbl,.sep,.celebrate,.tagline,.scroll-hint,.programma h2,.prog-intro,.t-ora,.t-body h3,.t-body p,.l-nome,.rsvp-note,.tableau h2,.tableau .prog-intro,.tav-nome,.tav-ospiti li,.tav-verso,.posto,.foto h2,.foto .prog-intro,.foto-testo,.foto-campo label,.btn-label,.link-piccolo,.foto-msg,.foto-nota,.foto-chiusa p,.tab-attesa,.sc-link';
+  const TXT_SEL = '.storia,.eyebrow,.date,.lbl,.sep,.celebrate,.tagline,.scroll-hint,.programma h2,.prog-intro,.t-ora,.t-body h3,.t-body p,.l-nome,.rsvp-note,.tableau h2,.tableau .prog-intro,.tav-nome,.tav-ospiti li,.tav-verso,.posto,.foto h2,.foto .prog-intro,.foto-testo,.foto-campo label,.btn-label,.link-piccolo,.foto-msg,.foto-nota,.foto-chiusa p,.tab-attesa,.sc-link,.gal-titolo,.gal-conta,.gal-vuota';
   const SVGNS = 'http://www.w3.org/2000/svg';
 
   function svgifyEl(el) {
@@ -1092,6 +1244,162 @@
       await Promise.all([lavoratore(), lavoratore()]);
       inCorso = false;
       aggiorna();
+      if (window.aggiornaGalleria) window.aggiornaGalleria();
+    }
+  })();
+
+
+  // ---------------- galleria pubblica ----------------
+  (function () {
+    const thumb = (id, w) => 'https://drive.google.com/thumbnail?id=' + id + '&sz=w' + w;
+    const grid = document.getElementById('gal-grid');
+    const conta = document.getElementById('gal-conta');
+    const vuota = document.getElementById('gal-vuota');
+    const altre = document.getElementById('gal-altre');
+    const PAG = 60;
+    let dati = [], mostrate = PAG, primoGiro = true, inVolo = false;
+
+    async function scarica() {
+      if (window.MOCK_GALLERIA) return window.MOCK_GALLERIA();
+      const d = await (await fetch(SCRIPT_URL + '?azione=galleria&t=' + Date.now())).json();
+      return d.foto || [];
+    }
+
+    function disegna() {
+      const visibili = dati.slice(0, mostrate);
+      const ids = new Set(visibili.map(f => f.id));
+      Array.from(grid.children).forEach(b => { if (!ids.has(b.dataset.id)) b.remove(); });
+      const esistenti = new Map(Array.from(grid.children).map(b => [b.dataset.id, b]));
+      visibili.forEach((f, i) => {
+        let b = esistenti.get(f.id);
+        if (!b) {
+          b = document.createElement('button');
+          b.type = 'button';
+          b.dataset.id = f.id;
+          if (f.video) b.classList.add('video');
+          if (!primoGiro) b.classList.add('nuova');
+          const img = document.createElement('img');
+          img.loading = 'lazy'; img.alt = f.autore ? 'Foto di ' + f.autore : 'Foto';
+          img.src = thumb(f.id, 400);
+          img.onerror = () => { if (!img.dataset.r) { img.dataset.r = 1; setTimeout(() => img.src = thumb(f.id, 400) + '&r=1', 4000); } };
+          b.appendChild(img);
+          b.addEventListener('click', () => apri(dati.findIndex(x => x.id === f.id)));
+        }
+        if (grid.children[i] !== b) grid.insertBefore(b, grid.children[i] || null);
+      });
+      const n = dati.length;
+      riscrivi(conta, n ? (n === 1 ? '1 ricordo' : n + ' ricordi') : ' ');
+      vuota.style.display = n ? 'none' : '';
+      altre.style.display = n > mostrate ? '' : 'none';
+      primoGiro = false;
+    }
+
+    async function aggiornaGalleria() {
+      if (inVolo || !document.body.classList.contains('foto-aperte')) return;
+      inVolo = true;
+      try { dati = await scarica(); disegna(); aggiornaVis(); } catch (e) {}
+      inVolo = false;
+    }
+    window.aggiornaGalleria = aggiornaGalleria;
+    window._galleria = () => dati;
+    altre.addEventListener('click', () => { mostrate += PAG; disegna(); });
+
+    if (!params.has('slideshow')) {
+      aggiornaGalleria();
+      setInterval(() => { if (document.visibilityState === 'visible') aggiornaGalleria(); }, 20000);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') aggiornaGalleria(); });
+    }
+
+    // ---- visualizzatore a schermo intero ----
+    const vis = document.getElementById('vis');
+    const media = document.getElementById('vis-media');
+    const dida = document.getElementById('vis-dida');
+    let cur = -1, curId = null;
+    function mostra(i) {
+      if (!dati.length) return chiudi();
+      cur = (i + dati.length) % dati.length;
+      const f = dati[cur]; curId = f.id;
+      media.innerHTML = f.video
+        ? '<iframe src="https://drive.google.com/file/d/' + f.id + '/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>'
+        : '<img src="' + thumb(f.id, 1600) + '" alt="">';
+      dida.textContent = f.autore ? 'di ' + f.autore : '';
+    }
+    function apri(i) {
+      vis.classList.add('aperto'); document.body.classList.add('vis-aperto');
+      history.pushState({ vis: 1 }, '');
+      mostra(i);
+    }
+    function chiudi() {
+      if (!vis.classList.contains('aperto')) return;
+      vis.classList.remove('aperto'); document.body.classList.remove('vis-aperto');
+      media.innerHTML = ''; curId = null;
+    }
+    function aggiornaVis() {
+      if (curId === null) return;
+      const i = dati.findIndex(x => x.id === curId);
+      if (i < 0) mostra(cur); else cur = i;
+    }
+    document.getElementById('vis-chiudi').addEventListener('click', () => history.back());
+    document.getElementById('vis-prec').addEventListener('click', () => mostra(cur - 1));
+    document.getElementById('vis-succ').addEventListener('click', () => mostra(cur + 1));
+    window.addEventListener('popstate', chiudi);
+    document.addEventListener('keydown', e => {
+      if (!vis.classList.contains('aperto')) return;
+      if (e.key === 'Escape') history.back();
+      if (e.key === 'ArrowLeft') mostra(cur - 1);
+      if (e.key === 'ArrowRight') mostra(cur + 1);
+    });
+    let x0 = null;
+    vis.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    vis.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50) mostra(cur + (dx < 0 ? 1 : -1));
+    });
+
+    // ---- slideshow per la TV: pagina?slideshow ----
+    if (params.has('slideshow')) {
+      document.body.classList.add('slideshow', 'foto-aperte');
+      const imgs = [document.getElementById('show-a'), document.getElementById('show-b')];
+      const fondi = [document.getElementById('fondo-a'), document.getElementById('fondo-b')];
+      const sdida = document.getElementById('show-dida');
+      const attesa = document.getElementById('show-attesa');
+      const visti = new Set(), nuove = [];
+      let giro = [], lato = 0, primo = true;
+      async function ricarica() {
+        try {
+          const lista = (await scarica()).filter(f => !f.video);
+          dati = lista;
+          lista.slice().reverse().forEach(f => {
+            if (!visti.has(f.id)) { visti.add(f.id); if (!primo) nuove.push(f); }
+          });
+          primo = false;
+        } catch (e) {}
+      }
+      function prossima() {
+        if (nuove.length) return nuove.shift();
+        if (!giro.length) giro = dati.slice().sort(() => Math.random() - 0.5);
+        return giro.shift();
+      }
+      function passo() {
+        const f = prossima();
+        if (!f) { setTimeout(passo, 5000); return; }
+        attesa.style.display = 'none';
+        const url = thumb(f.id, 2000);
+        const pre = new Image();
+        pre.onload = () => {
+          lato = 1 - lato;
+          imgs[lato].src = url; fondi[lato].src = url;
+          imgs[lato].classList.add('on'); fondi[lato].classList.add('on');
+          imgs[1 - lato].classList.remove('on'); fondi[1 - lato].classList.remove('on');
+          sdida.textContent = f.autore ? 'di ' + f.autore : '';
+          setTimeout(passo, 7000);
+        };
+        pre.onerror = () => setTimeout(passo, 1000);
+        pre.src = url;
+      }
+      ricarica().then(passo);
+      setInterval(ricarica, 15000);
     }
   })();
 
