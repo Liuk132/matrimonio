@@ -741,6 +741,7 @@
   .pill a[hidden] { display: none; }
   .pill-l { display: block; overflow: visible; }
   body.vis-aperto .pill { display: none; }
+  body:not(.tableau-aperto) .scorciatoie a[href="#tableau"] { display: none; }
 
   @media (prefers-reduced-motion: reduce) {
     .spark { animation: none; opacity: 0.4; }
@@ -1107,7 +1108,7 @@
   //  Collegamento allo script Google (foto su Drive + tableau a tempo)
   // =====================================================================
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2DKlpivHLdkO9ZFufdGQ0hBT3ggrgJbEg13chrCUgUg0IwPQ43uq8TrjMPgqRm0uk/exec';
-  const APERTURA_TABLEAU = new Date('2026-10-10T15:30:00+02:00');
+  const APERTURA_TABLEAU = new Date('2026-10-10T16:15:00+02:00');
   const APERTURA_FOTO    = new Date('2026-10-10T00:00:00+02:00');
   const INIZIO_EVENTO    = new Date('2026-10-10T15:00:00+02:00');
   const params = new URLSearchParams(location.search);
@@ -1165,6 +1166,9 @@
   function mostraTableau(tavoli) {
     const sez = document.getElementById('tableau');
     sez.hidden = false;
+    document.body.classList.add('tableau-aperto');
+    const pianta = sez.querySelector('.pianta');
+    if (pianta) pianta.style.display = tavoli.length === 2 ? '' : 'none';   // lo schema vale per due tavolate
     disegnaTavoli(tavoli);
     sez.querySelectorAll('h2,.prog-intro,.tav-nome,.tav-verso,.posto').forEach(el => { try { svgifyEl(el); } catch (e) {} });
   }
@@ -1313,10 +1317,24 @@
     const PAG = 60;
     let dati = [], mostrate = PAG, primoGiro = true, inVolo = false;
 
+    // chiede solo le novità: se non è cambiato nulla la risposta pesa pochi byte
+    let versione = '', copia = [];
     async function scarica() {
       if (window.MOCK_GALLERIA) return window.MOCK_GALLERIA();
-      const d = await (await fetch(SCRIPT_URL + '?azione=galleria&t=' + Date.now())).json();
-      return d.foto || [];
+      const dal = copia.length ? Math.max.apply(null, copia.map(f => f.t)) : 0;
+      let url = SCRIPT_URL + '?azione=galleria&t=' + Date.now();
+      if (versione) url += '&v=' + encodeURIComponent(versione) + '&dal=' + dal;
+      let d = await (await fetch(url)).json();
+      if (d.uguale) return copia;
+      if (d.nuove) {
+        const ids = new Set(copia.map(f => f.id));
+        const unite = d.nuove.filter(f => !ids.has(f.id)).concat(copia);
+        if (unite.length !== d.tot) d = await (await fetch(SCRIPT_URL + '?azione=galleria&t=' + Date.now())).json();   // qualcosa è stato tolto
+        else { versione = d.versione; copia = unite.sort((a, b) => b.t - a.t); return copia; }
+      }
+      versione = d.versione || '';
+      copia = d.foto || [];
+      return copia;
     }
 
     // foto appena scelte da questo telefono: si vedono subito, prima ancora che arrivino su Drive
