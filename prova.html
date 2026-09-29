@@ -1170,6 +1170,10 @@
 
     let inCorso = false, totale = 0, fatte = 0, errori = 0, grandi = 0, totInviate = +(store.get('inviate-gl') || 0);
     const coda = [];
+    const inCoda = new Set();
+    let inviati;
+    try { inviati = new Set(JSON.parse(store.get('inviati-gl') || '[]')); } catch (e) { inviati = new Set(); }
+    const segnaInviato = k => { inviati.add(k); store.set('inviati-gl', JSON.stringify(Array.from(inviati).slice(-500))); };
 
     btn.addEventListener('click', () => { if (!inCorso) input.click(); });
     input.addEventListener('change', () => {
@@ -1177,11 +1181,16 @@
       input.value = '';
       if (!files.length) return;
       store.set('autore-gl', autore.value.trim());
+      let nuovi = 0;
       files.forEach(f => {
+        const k = f.name + '|' + f.size + '|' + f.lastModified;
+        if (inviati.has(k) || inCoda.has(k)) return;          // già caricata: niente doppioni
+        nuovi++;
         if (f.size > MAX_MB * 1024 * 1024) grandi++;
-        else coda.push(f);
+        else { inCoda.add(k); f._k = k; coda.push(f); }
       });
-      totale += files.length;
+      if (!nuovi) { stato.classList.add('attivo'); riscrivi(msg, files.length === 1 ? 'Questa foto è già arrivata ✦' : 'Queste foto sono già arrivate ✦'); return; }
+      totale += nuovi;
       avvia();
     });
 
@@ -1230,8 +1239,9 @@
     async function lavoratore() {
       while (coda.length) {
         const f = coda.shift();
-        if (await invia(f)) { fatte++; totInviate++; store.set('inviate-gl', totInviate); }
+        if (await invia(f)) { fatte++; totInviate++; store.set('inviate-gl', totInviate); segnaInviato(f._k); }
         else errori++;
+        inCoda.delete(f._k);
         aggiorna();
       }
     }
