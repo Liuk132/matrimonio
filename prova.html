@@ -481,6 +481,27 @@
   .tav-bar .bar-lbl { position: absolute; left: 50%; top: 50%; width: 20px; height: 140px; transform: translate(-50%, -50%); }
   .posto.sx { grid-column: 1; text-align: right; }
   .posto.dx { grid-column: 3; text-align: left; }
+  .tab-chiuso {
+    margin: 2.2rem auto 0;
+    max-width: 360px;
+    padding: 1.8rem 1.2rem;
+    border: 1px solid var(--sage);
+    position: relative;
+    text-align: center;
+  }
+  .tab-chiuso::before {
+    content: ''; position: absolute; inset: 6px;
+    border: 1px solid var(--gold); opacity: 0.55; pointer-events: none;
+  }
+  .tab-attesa-titolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.4;
+    color: var(--sage-deep);
+    text-align: center;
+  }
+  body.tableau-aperto .tab-chiuso { display: none; }
   .tab-attesa {
     margin-top: 2rem;
     text-align: center;
@@ -882,9 +903,14 @@
   </div>
 </section>
 
-<section class="tableau" id="tableau" hidden>
+<section class="tableau" id="tableau">
   <h2>Tableau de mariage</h2>
   <p class="prog-intro">Trovate il vostro posto</p>
+  <div class="tab-chiuso" id="tab-chiuso">
+    <p class="tab-attesa-titolo">I tavoli verranno svelati<br>dopo la cerimonia ✦</p>
+    <p class="tab-attesa" id="tab-attesa-nota">Tenete aperta questa pagina: appariranno da soli.</p>
+  </div>
+  <div id="tab-contenuto" hidden>
   <svg class="pianta" viewBox="0 0 300 340" role="img" aria-label="Disposizione dei tavoli: sposi in alto, Tavolata I a sinistra, Tavolata II a destra">
     <g fill="#C9A96A" opacity="0.55"><circle cx="122" cy="40" r="3.4"/><circle cx="178" cy="40" r="3.4"/></g>
     <circle cx="150" cy="44" r="23" fill="#FBF9F4" stroke="#C9A96A" stroke-width="1.2"/>
@@ -899,6 +925,7 @@
     <text transform="translate(203 214) rotate(-90)" text-anchor="middle" font-family="Jost, sans-serif" font-size="8" letter-spacing="2.4" fill="#6E8163">TAVOLATA II</text>
   </svg>
   <div id="tavoli"></div>
+  </div>
 </section>
 
 
@@ -943,7 +970,7 @@
 
   
   // ---- testi come SVG: Samsung dark non li inverte ----
-  const TXT_SEL = '.storia,.eyebrow,.date,.lbl,.sep,.celebrate,.tagline,.scroll-hint,.programma h2,.prog-intro,.t-ora,.t-body h3,.t-body p,.l-nome,.rsvp-note,.tableau h2,.tableau .prog-intro,.tav-nome,.tav-ospiti li,.tav-verso,.posto,.foto h2,.foto .prog-intro,.foto-testo,.foto-campo label,.btn-label,.link-piccolo,.foto-msg,.foto-nota,.foto-chiusa p,.tab-attesa,.sc-link,.gal-titolo,.gal-conta,.gal-vuota';
+  const TXT_SEL = '.storia,.eyebrow,.date,.lbl,.sep,.celebrate,.tagline,.scroll-hint,.programma h2,.prog-intro,.t-ora,.t-body h3,.t-body p,.l-nome,.rsvp-note,.tableau h2,.tableau .prog-intro,.tav-nome,.tav-ospiti li,.tav-verso,.posto,.foto h2,.foto .prog-intro,.foto-testo,.foto-campo label,.btn-label,.link-piccolo,.foto-msg,.foto-nota,.foto-chiusa p,.tab-attesa,.tab-attesa-titolo,.sc-link,.gal-titolo,.gal-conta,.gal-vuota';
   const SVGNS = 'http://www.w3.org/2000/svg';
 
   function svgifyEl(el) {
@@ -1165,7 +1192,10 @@
 
   function mostraTableau(tavoli) {
     const sez = document.getElementById('tableau');
-    sez.hidden = false;
+    const firma = JSON.stringify(tavoli);
+    if (sez.dataset.firma === firma) return;            // nulla di cambiato
+    sez.dataset.firma = firma;
+    document.getElementById('tab-contenuto').hidden = false;
     document.body.classList.add('tableau-aperto');
     const pianta = sez.querySelector('.pianta');
     if (pianta) pianta.style.display = tavoli.length === 2 ? '' : 'none';   // lo schema vale per due tavolate
@@ -1174,10 +1204,13 @@
   }
 
   let tentativi = 0;
+  // prova generale: ?anteprima=CHIAVE&alle=2026-09-30T16:15 apre il tableau all'ora indicata
+  const APERTURA_EFFETTIVA = params.get('alle') ? new Date(params.get('alle') + ':00+02:00') : APERTURA_TABLEAU;
   async function caricaTableau() {
     const chiave = params.get('anteprima');
-    if (!chiave && new Date() < APERTURA_TABLEAU) {
-      setTimeout(caricaTableau, Math.min(APERTURA_TABLEAU - new Date() + 1500, 2147483000));
+    const attesa = chiave && !params.get('alle') ? 0 : APERTURA_EFFETTIVA - new Date();
+    if (attesa > 0) {
+      setTimeout(caricaTableau, Math.min(attesa + 1500, 2147483000));
       return;
     }
     const salvato = store.get('tableau-gl');
@@ -1192,6 +1225,8 @@
       if (d.aperto) {
         mostraTableau(d.tavoli);
         if (!chiave) store.set('tableau-gl', JSON.stringify(d.tavoli));
+        tentativi = 0;
+        setTimeout(caricaTableau, 120000);   // i tavoli possono cambiare fino all'ultimo: ricontrollo ogni 2 minuti
       } else if (tentativi++ < 20) {
         setTimeout(caricaTableau, 60000);   // l'orologio del telefono è avanti: riprovo tra un minuto
       }
@@ -1517,7 +1552,7 @@
     const hero = document.querySelector('.hero');
     let fotoVisibile = false, heroVisibile = true;
     const aggiorna = () => {
-      tab.hidden = document.getElementById('tableau').hidden;
+      tab.hidden = !document.body.classList.contains('tableau-aperto');
       pill.classList.toggle('su', !fotoVisibile && !heroVisibile);
     };
     if ('IntersectionObserver' in window) {
