@@ -1,0 +1,29 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//G&L//Matrimonio//IT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:matrimonio-gl-20261010@liuk132.github.io
+DTSTAMP:20260929T100000Z
+DTSTART:20261010T130000Z
+DTEND:20261010T230000Z
+SUMMARY:Matrimonio G & L
+LOCATION:Abbazia di San Donato\, Via S. Donato 6\, Sesto Calende (VA)
+DESCRIPTION:15:00 Ritrovo in chiesa – Abbazia di San Donato\, Sesto Calen
+ de\n15:30 Cerimonia\n17:30 Aperitivo di benvenuto – I Fontanili\, Via As
+ sisi 103\, Gallarate\n20:00 Cena\n22:00 Taglio della torta\n\nProgramma e 
+ tableau: https://liuk132.github.io/matrimonio/
+URL:https://liuk132.github.io/matrimonio/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Domani il matrimonio di G & L
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Tra 2 ore ritrovo all'Abbazia di San Donato
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+END:VCALENDAR
